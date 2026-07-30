@@ -2,7 +2,7 @@
 import { apiRequest } from "../../lib/api";
 import { useAuth } from "../../context/auth";
 import { Card } from "../../components/ui/Card";
-import { toDateTimeLocalValue } from "../shared/utils";
+import { formatBRL, toDateTimeLocalValue } from "../shared/utils";
 
 type Category = {
   id: string;
@@ -121,7 +121,7 @@ export function TransactionsPage() {
       <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
         <Card>
           <h2 className="text-lg font-semibold text-slate-950">
-            {editingId ? "Editar transação" : "Nova transação"}
+            {editingId ? "✏️ Editar transação" : "💸 Nova transação"}
           </h2>
           <form className="mt-5 grid gap-4" onSubmit={handleSubmit}>
             <input
@@ -198,7 +198,7 @@ export function TransactionsPage() {
         </Card>
 
         <Card>
-          <h2 className="text-lg font-semibold text-slate-950">Movimentações</h2>
+          <h2 className="text-lg font-semibold text-slate-950">🧾 Movimentações</h2>
           <div className="mt-5 space-y-3">
             {loading ? (
               <p className="text-sm text-slate-500">Carregando...</p>
@@ -223,7 +223,7 @@ export function TransactionsPage() {
                           : "font-semibold text-rose-600"
                       }
                     >
-                      {transaction.kind === "income" ? "+" : "-"} R$ {transaction.amount.toFixed(2)}
+                      {transaction.kind === "income" ? "+" : "-"} {formatBRL(transaction.amount)}
                     </p>
                     <button
                       className="text-sm font-medium text-brand-700"

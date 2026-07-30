@@ -1,31 +1,33 @@
-﻿import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../context/auth";
 import { Card } from "../../components/ui/Card";
+import { formatBRL } from "../shared/utils";
+import { saldoAtual, totalDespesas, totalReceitas } from "../dashboard/data";
 
-const highlights = [
+const recursos = [
   {
-    title: "Dashboard que parece produto",
+    emoji: "💵",
+    title: "Saldo sempre claro",
     description:
-      "Resumo financeiro, gráficos, alertas e visão rápida da saúde do mês em uma interface pronta para portfólio.",
+      "Veja saldo atual, receitas e despesas do mês em cartões diretos, sem poluição visual.",
   },
   {
-    title: "CRUD com regras de negócio",
+    emoji: "📊",
+    title: "Gráficos que explicam",
     description:
-      "Receitas, despesas, categorias e limites mensais com persistência real e fluxo de autenticação completo.",
+      "Despesas por categoria em rosca e o comparativo de receitas vs. despesas em barras.",
   },
   {
-    title: "Base pronta para evolução",
+    emoji: "🎯",
+    title: "Categorias e limites",
     description:
-      "Estrutura preparada para recorrências, exportação, metas, notificações e recursos com IA.",
+      "Organize gastos por categoria com emojis e defina limites mensais para não estourar o orçamento.",
   },
 ];
 
-const portfolioPoints = [
-  "Autenticação com JWT",
-  "Modelagem relacional com Prisma",
-  "Dashboard profissional com gráficos",
-  "Controle de categorias e limites",
-];
+const saldo = saldoAtual();
+const receitas = totalReceitas();
+const despesas = totalDespesas();
 
 export function HomePage() {
   const { user } = useAuth();
@@ -35,16 +37,15 @@ export function HomePage() {
       <section className="mx-auto grid min-h-screen w-full max-w-7xl gap-8 px-6 py-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
         <div className="space-y-8">
           <div className="inline-flex items-center rounded-full border border-teal-200 bg-white/80 px-4 py-2 text-sm font-medium text-teal-900 shadow-sm">
-            FinPilot Financeiro
+            💰 Painel Financeiro Pessoal
           </div>
           <div className="space-y-5">
             <h1 className="max-w-3xl text-5xl font-semibold tracking-tight text-slate-950 md:text-7xl">
-              Organize finanças com clareza, ritmo e cara de produto.
+              Controle suas finanças com clareza e simplicidade.
             </h1>
             <p className="max-w-2xl text-lg leading-8 text-slate-600 md:text-xl">
-              Uma plataforma para controlar receitas, despesas, categorias, limites mensais e
-              analisar gastos em um dashboard visual, prática para uso real e forte para
-              apresentação em portfólio.
+              Registre receitas e despesas, organize por categorias com emojis e acompanhe
+              tudo em um painel minimalista, direto e fácil de ler.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -58,18 +59,19 @@ export function HomePage() {
               className="rounded-full border border-slate-200 bg-white px-6 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
               to="/login"
             >
-              Entrar na demo
+              Entrar
             </Link>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-3 sm:grid-cols-3">
             {[
-              { label: "CRUD", value: "Completo" },
-              { label: "Dashboard", value: "Profissional" },
-              { label: "Banco", value: "Persistente" },
-              { label: "IA", value: "Base pronta" },
+              { emoji: "💵", label: "Saldo atual", value: formatBRL(saldo) },
+              { emoji: "📈", label: "Receitas", value: formatBRL(receitas) },
+              { emoji: "📉", label: "Despesas", value: formatBRL(despesas) },
             ].map((item) => (
               <Card key={item.label}>
-                <p className="text-sm text-slate-500">{item.label}</p>
+                <p className="text-sm text-slate-500">
+                  <span aria-hidden>{item.emoji}</span> {item.label}
+                </p>
                 <p className="mt-2 text-xl font-semibold text-slate-950">{item.value}</p>
               </Card>
             ))}
@@ -84,85 +86,52 @@ export function HomePage() {
                   Visão geral
                 </p>
                 <h2 className="mt-3 text-3xl font-semibold text-slate-950">
-                  Painel pronto para screenshot.
+                  Seu mês em um olhar.
                 </h2>
               </div>
               <div className="rounded-2xl bg-teal-50 px-4 py-2 text-sm font-medium text-teal-800">
-                Demo ativa
+                Este mês
               </div>
             </div>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               <div className="rounded-3xl bg-slate-950 p-5 text-white">
-                <p className="text-sm text-slate-400">Saldo atual</p>
-                <p className="mt-2 text-3xl font-semibold">R$ 8.420</p>
-                <p className="mt-2 text-sm text-emerald-300">+12,4% no mês</p>
+                <p className="text-sm text-slate-400">💵 Saldo atual</p>
+                <p className="mt-2 text-3xl font-semibold">{formatBRL(saldo)}</p>
+                <p className="mt-2 text-sm text-emerald-300">Receitas menos despesas</p>
               </div>
               <div className="rounded-3xl bg-slate-50 p-5">
-                <p className="text-sm text-slate-500">Alertas inteligentes</p>
-                <div className="mt-4 space-y-3">
-                  <div className="h-3 w-full rounded-full bg-slate-200">
-                    <div className="h-3 w-[78%] rounded-full bg-brand-700" />
-                  </div>
-                  <div className="h-3 w-full rounded-full bg-slate-200">
-                    <div className="h-3 w-[54%] rounded-full bg-teal-500" />
-                  </div>
-                  <div className="h-3 w-full rounded-full bg-slate-200">
-                    <div className="h-3 w-[32%] rounded-full bg-amber-500" />
-                  </div>
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-slate-500">📈 Receitas</p>
+                  <p className="text-sm font-semibold text-emerald-600">{formatBRL(receitas)}</p>
                 </div>
+                <div className="mt-4 flex items-center justify-between">
+                  <p className="text-sm text-slate-500">📉 Despesas</p>
+                  <p className="text-sm font-semibold text-rose-600">{formatBRL(despesas)}</p>
+                </div>
+                <div className="mt-5 h-3 w-full overflow-hidden rounded-full bg-slate-200">
+                  <div
+                    className="h-3 rounded-full bg-rose-500"
+                    style={{ width: `${Math.min(100, (despesas / receitas) * 100)}%` }}
+                  />
+                </div>
+                <p className="mt-2 text-xs text-slate-500">
+                  {Math.round((despesas / receitas) * 100)}% das receitas já foram gastas
+                </p>
               </div>
-            </div>
-            <div className="mt-4 rounded-3xl bg-gradient-to-r from-teal-50 via-slate-50 to-indigo-50 p-5">
-              <p className="text-sm font-medium text-slate-500">Conta demo</p>
-              <p className="mt-2 text-lg font-semibold text-slate-950">ana@finpilot.com</p>
-              <p className="text-sm text-slate-500">Senha: 123456</p>
             </div>
           </Card>
         </div>
       </section>
 
-      <section className="mx-auto grid w-full max-w-7xl gap-6 px-6 pb-12 lg:grid-cols-3">
-        {highlights.map((item) => (
+      <section className="mx-auto grid w-full max-w-7xl gap-6 px-6 pb-16 lg:grid-cols-3">
+        {recursos.map((item) => (
           <Card key={item.title}>
-            <h3 className="text-lg font-semibold text-slate-950">{item.title}</h3>
+            <h3 className="text-lg font-semibold text-slate-950">
+              <span aria-hidden>{item.emoji}</span> {item.title}
+            </h3>
             <p className="mt-3 text-sm leading-6 text-slate-600">{item.description}</p>
           </Card>
         ))}
-      </section>
-
-      <section className="mx-auto grid w-full max-w-7xl gap-6 px-6 pb-16 lg:grid-cols-[0.9fr_1.1fr]">
-        <Card>
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-teal-700">
-            O que o projeto prova
-          </p>
-          <div className="mt-5 grid gap-3">
-            {portfolioPoints.map((point) => (
-              <div key={point} className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700">
-                {point}
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        <Card>
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-teal-700">
-            Próximas evoluções
-          </p>
-          <div className="mt-5 grid gap-3 md:grid-cols-2">
-            {[
-              "Metas financeiras",
-              "Contas recorrentes",
-              "Exportação PDF/CSV",
-              "Categorização com IA",
-              "Resumo mensal com IA",
-              "Multiusuário",
-            ].map((item) => (
-              <div key={item} className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700">
-                {item}
-              </div>
-            ))}
-          </div>
-        </Card>
       </section>
     </main>
   );

@@ -8,28 +8,28 @@ export function PublicShell({ children }: PropsWithChildren) {
           <section className="flex flex-col justify-between rounded-[2rem] border border-white/70 bg-slate-950 p-8 text-white shadow-2xl shadow-slate-900/20">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.35em] text-teal-300">
-                FinPilot Financeiro
+                💰 Painel Financeiro
               </p>
               <h1 className="mt-4 max-w-xl text-4xl font-semibold leading-tight md:text-6xl">
-                Organize sua vida financeira com clareza de produto.
+                Organize suas finanças pessoais com clareza total.
               </h1>
               <p className="mt-5 max-w-xl text-base text-slate-300 md:text-lg">
-                Dashboard visual, receitas, despesas, limites e uma base pronta para
-                análises inteligentes. Tudo com foco em portfólio e evolução real.
+                Saldo, receitas, despesas por categoria e limites mensais em um painel
+                visual, direto e fácil de ler. Sem ruído, foco nos seus números.
               </p>
             </div>
             <div className="mt-10 grid grid-cols-3 gap-3 text-sm">
               <div className="rounded-2xl bg-white/10 p-4">
-                <p className="text-slate-300">CRUD</p>
-                <p className="mt-1 font-semibold">Completo</p>
+                <p className="text-slate-300">💵 Saldo</p>
+                <p className="mt-1 font-semibold">Em tempo real</p>
               </div>
               <div className="rounded-2xl bg-white/10 p-4">
-                <p className="text-slate-300">Dashboard</p>
-                <p className="mt-1 font-semibold">Profissional</p>
+                <p className="text-slate-300">📊 Gráficos</p>
+                <p className="mt-1 font-semibold">Por categoria</p>
               </div>
               <div className="rounded-2xl bg-white/10 p-4">
-                <p className="text-slate-300">Banco</p>
-                <p className="mt-1 font-semibold">Pronto</p>
+                <p className="text-slate-300">🎯 Limites</p>
+                <p className="mt-1 font-semibold">Mensais</p>
               </div>
             </div>
           </section>
