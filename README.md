@@ -1,4 +1,4 @@
-﻿# Saldo — Painel Financeiro Pessoal
+﻿# Fatia — Painel Financeiro Pessoal
 
 Painel pessoal para organizar receitas, despesas, categorias e limites em um dashboard visual, minimalista e direto.
 
