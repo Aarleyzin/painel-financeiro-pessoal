@@ -1,6 +1,6 @@
 {
-  "name": "Painel Financeiro Pessoal",
-  "short_name": "Financeiro",
+  "name": "Saldo — Painel Financeiro",
+  "short_name": "Saldo",
   "description": "Controle suas receitas, despesas e limites em um painel minimalista.",
   "lang": "pt-BR",
   "start_url": "./",
