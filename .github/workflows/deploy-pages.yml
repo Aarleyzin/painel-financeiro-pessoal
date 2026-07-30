@@ -41,9 +41,9 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build do front
-        # Ajuste VITE_API_URL para o endereço público da sua API.
+        # Defina a variável de repositório VITE_API_URL apontando para a API.
         env:
-          VITE_API_URL: ${{ vars.VITE_API_URL || 'https://finpilot-api-ng5i.onrender.com' }}
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
         run: pnpm --filter @painel/web build
 
       - name: Configurar Pages

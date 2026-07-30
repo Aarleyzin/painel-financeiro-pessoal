@@ -53,7 +53,7 @@ painel-pessoal-financeiro/
 - Banco: Prisma com SQLite no desenvolvimento
 - Auth: JWT
 - Gráficos: Recharts
-- Deploy: auto-hospedagem (Render/Railway/Fly/etc.)
+- Deploy do front: GitHub Pages (workflow em `.github/workflows/deploy-pages.yml`)
 
 ## Link do repositório
 
@@ -107,12 +107,12 @@ receitas, despesas, categorias e limites já conversam com a API real.
 
 Para produção, use PostgreSQL no `DATABASE_URL` (SQLite é apenas para desenvolvimento local).
 
-## Deploy no Render (infra como código)
+## Deploy do front (GitHub Pages)
 
-- Arquivo `render.yaml` pronto com dois serviços:
-  - `finpilot-api` (web service Node): usa `DATABASE_URL` (Postgres) e `JWT_SECRET`.
-  - `finpilot-web` (static): publica `apps/web/dist` e lê `VITE_API_URL` (padrão aponta para `https://finpilot-api-ng5i.onrender.com`).
+- O workflow `.github/workflows/deploy-pages.yml` builda `apps/web` e publica no GitHub Pages a cada push na `main`.
 - Passos:
-  1. No Render, “New +” → “Blueprint” → aponte para este repositório.
-  2. Defina as envs `DATABASE_URL` e `JWT_SECRET` no serviço `finpilot-api`.
-  3. Deploy; o front já sairá apontando para o host da API (ajuste `VITE_API_URL` se necessário).
+  1. Em **Settings → Pages**, defina **Source: GitHub Actions**.
+  2. (Opcional) Crie a variável de repositório `VITE_API_URL` apontando para a sua API.
+  3. Ao mesclar na `main`, o site publica em `https://<seu-usuario>.github.io/<repositorio>/`.
+
+> A API (Node/Express) pode ser hospedada onde você preferir; basta apontar `VITE_API_URL` para ela.
