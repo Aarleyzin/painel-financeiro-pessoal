@@ -1,9 +1,0 @@
-services:
-  - type: static_site
-    name: finpilot-web
-    buildCommand: |
-      cd apps/web
-      echo "VITE_API_URL=https://finpilot-api-ng5i.onrender.com" > .env
-      pnpm install --frozen-lockfile
-      pnpm build
-    publishPath: apps/web/dist
