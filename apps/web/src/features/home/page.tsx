@@ -26,7 +26,7 @@ export function HomePage() {
       <section className="mx-auto grid min-h-screen w-full max-w-7xl gap-8 px-6 py-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
         <div className="space-y-8">
           <div className="inline-flex items-center rounded-full border border-teal-200 bg-white/80 px-4 py-2 text-sm font-medium text-teal-900 shadow-sm">
-            💰 Painel Financeiro Pessoal
+            📊 Saldo · painel financeiro pessoal
           </div>
           <div className="space-y-5">
             <h1 className="max-w-3xl text-5xl font-semibold tracking-tight text-slate-950 md:text-7xl">

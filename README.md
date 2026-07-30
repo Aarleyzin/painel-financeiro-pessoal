@@ -1,4 +1,4 @@
-﻿# Painel Financeiro Pessoal
+﻿# Saldo — Painel Financeiro Pessoal
 
 Painel pessoal para organizar receitas, despesas, categorias e limites em um dashboard visual, minimalista e direto.
 

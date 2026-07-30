@@ -42,8 +42,8 @@ export function ProtectedShell() {
       <header className="border-b border-slate-200 bg-white/80 backdrop-blur">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-lg font-semibold text-slate-950">💰 Painel Financeiro</p>
-            <p className="text-sm text-slate-500">Suas finanças pessoais</p>
+            <p className="text-lg font-semibold text-slate-950">📊 Saldo</p>
+            <p className="text-sm text-slate-500">Seu painel financeiro pessoal</p>
           </div>
           <nav className="flex flex-wrap gap-2">
             <NavLink to="/dashboard" className={linkClass}>
