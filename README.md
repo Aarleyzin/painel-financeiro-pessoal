@@ -1,6 +1,6 @@
-﻿# FinPilot Financeiro
+﻿# Painel Financeiro Pessoal
 
-Plataforma de gestão financeira para organizar receitas, despesas, metas e limites em um dashboard visual, simples e profissional.
+Painel pessoal para organizar receitas, despesas, categorias e limites em um dashboard visual, minimalista e direto.
 
 ## Destaques
 
@@ -13,7 +13,7 @@ Plataforma de gestão financeira para organizar receitas, despesas, metas e limi
 
 ## Preview
 
-O FinPilot Financeiro foi pensado para apresentar no portfólio uma aplicação com cara de produto real:
+O Painel Financeiro Pessoal foi pensado como uma aplicação com cara de produto real:
 
 - landing page com proposta clara do projeto
 - tela de login e cadastro
@@ -25,7 +25,7 @@ O FinPilot Financeiro foi pensado para apresentar no portfólio uma aplicação 
 ## Estrutura
 
 ```text
-finpilot-financeiro/
+painel-pessoal-financeiro/
 ├─ apps/
 │  ├─ web/        # React + Tailwind
 │  └─ api/        # Node.js + Express
@@ -57,7 +57,7 @@ finpilot-financeiro/
 
 ## Link do repositório
 
-- [GitHub público](https://github.com/Aarleyzin/finpilot-financeiro)
+- [GitHub público](https://github.com/Aarleyzin/painel-pessoal-financeiro)
 
 ## Como rodar
 
@@ -72,10 +72,15 @@ pnpm db:seed
 pnpm dev
 ```
 
-## Conta demo
+## Conta de acesso
 
-- E-mail: `ana@finpilot.com`
-- Senha: `123456`
+Nenhuma credencial fica no repositório. A conta pessoal é criada a partir de
+variáveis de ambiente, definidas apenas no seu ambiente/hospedagem:
+
+- `OWNER_NAME`, `OWNER_EMAIL` e `OWNER_PASSWORD`
+
+Se `OWNER_PASSWORD` não estiver definido, nenhuma conta é semeada. Você também
+pode criar sua conta diretamente em `/register`.
 
 ## Capturas sugeridas
 

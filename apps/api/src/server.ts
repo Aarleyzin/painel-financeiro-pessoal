@@ -1,12 +1,12 @@
 import { app } from "./app.js";
 import { env } from "./config/env.js";
-import { bootstrapDemoUsers } from "./lib/bootstrap-demo.js";
+import { bootstrapOwnerUser } from "./lib/bootstrap-owner.js";
 
 (async () => {
   try {
-    await bootstrapDemoUsers();
+    await bootstrapOwnerUser();
   } catch (error) {
-    console.error("Failed to seed demo users", error);
+    console.error("Failed to seed owner user", error);
   }
 
   app.listen(env.PORT, () => {

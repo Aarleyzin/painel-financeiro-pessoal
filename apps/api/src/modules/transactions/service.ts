@@ -28,6 +28,14 @@ async function ensureOwnership(userId: string | undefined) {
   return userId;
 }
 
+async function ensureCategoryOwnership(userId: string, categoryId: string | null | undefined) {
+  if (!categoryId) return;
+  const category = await prisma.category.findFirst({ where: { id: categoryId, userId } });
+  if (!category) {
+    throw Object.assign(new Error("Category not found"), { status: 404 });
+  }
+}
+
 async function resolveTransactionOrThrow(userId: string, id: string) {
   const transaction = await prisma.transaction.findFirst({
     where: { id, userId },
@@ -99,6 +107,7 @@ export async function listTransactionsService(
 export async function createTransactionService(userId: string | undefined, payload: unknown) {
   const authUserId = await ensureOwnership(userId);
   const data = transactionSchema.parse(payload);
+  await ensureCategoryOwnership(authUserId, data.categoryId);
 
   const transaction = await prisma.transaction.create({
     data: {
@@ -137,6 +146,9 @@ export async function updateTransactionService(
   const authUserId = await ensureOwnership(userId);
   await resolveTransactionOrThrow(authUserId, id);
   const data = updateSchema.parse(payload);
+  if (data.categoryId !== undefined) {
+    await ensureCategoryOwnership(authUserId, data.categoryId);
+  }
 
   const transaction = await prisma.transaction.update({
     where: { id },

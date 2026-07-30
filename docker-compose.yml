@@ -1,17 +1,16 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: finpilot-financeiro-postgres
+    container_name: painel-financeiro-postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: finpilot_financeiro
+      POSTGRES_DB: painel_financeiro
     ports:
       - "5432:5432"
     volumes:
-      - finpilot_financeiro_pgdata:/var/lib/postgresql/data
+      - painel_financeiro_pgdata:/var/lib/postgresql/data
 
 volumes:
-  finpilot_financeiro_pgdata:
-
+  painel_financeiro_pgdata:

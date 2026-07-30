@@ -6,11 +6,11 @@ services:
     region: oregon
     buildCommand: |
       pnpm install --frozen-lockfile --prod=false
-      pnpm --filter @finpilot/api prisma generate
-      pnpm --filter @finpilot/api prisma migrate deploy
-      pnpm --filter @finpilot/api prisma db seed
-      pnpm --filter @finpilot/api build
-    startCommand: pnpm --filter @finpilot/api start
+      pnpm --filter @painel/api prisma generate
+      pnpm --filter @painel/api prisma migrate deploy
+      pnpm --filter @painel/api prisma db seed
+      pnpm --filter @painel/api build
+    startCommand: pnpm --filter @painel/api start
     envVars:
       - key: DATABASE_URL
         sync: false

@@ -2,7 +2,14 @@ import { TransactionKind } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { prisma } from "./prisma.js";
 
-const shouldSeed = process.env.DEMO_SEED_ON_START !== "false";
+// Semeia a conta pessoal do dono do painel.
+// Desative em produção com SEED_OWNER_ON_START=false.
+const shouldSeed = process.env.SEED_OWNER_ON_START !== "false";
+
+// Dados do dono vêm de variáveis de ambiente (nenhuma credencial fica no código).
+const OWNER_NAME = process.env.OWNER_NAME ?? "Aarleyzin";
+const OWNER_EMAIL = (process.env.OWNER_EMAIL ?? "aarleyzin@meupainel.app").toLowerCase();
+const OWNER_PASSWORD = process.env.OWNER_PASSWORD;
 
 function currentMonthStart() {
   const now = new Date();
@@ -13,7 +20,7 @@ function atDay(base: Date, day: number, hour = 12) {
   return new Date(base.getFullYear(), base.getMonth(), day, hour, 0, 0, 0);
 }
 
-async function seedDemoUser(email: string, name: string, password: string) {
+async function seedOwner(email: string, name: string, password: string) {
   const passwordHash = await bcrypt.hash(password, 10);
 
   const user = await prisma.user.upsert({
@@ -22,13 +29,14 @@ async function seedDemoUser(email: string, name: string, password: string) {
     create: { name, email, passwordHash },
   });
 
-  await prisma.transaction.deleteMany({ where: { userId: user.id } });
-  await prisma.monthlyLimit.deleteMany({ where: { userId: user.id } });
-  await prisma.category.deleteMany({ where: { userId: user.id } });
+  // Só semeia os dados de exemplo se a conta ainda não tiver movimentações,
+  // para não apagar o que o dono já cadastrou.
+  const existingTransactions = await prisma.transaction.count({ where: { userId: user.id } });
+  if (existingTransactions > 0) return;
 
   const categories = {
     salary: await prisma.category.create({
-      data: { userId: user.id, name: "Salario", kind: TransactionKind.INCOME, color: "#0f766e" },
+      data: { userId: user.id, name: "Salário", kind: TransactionKind.INCOME, color: "#0f766e" },
     }),
     freelance: await prisma.category.create({
       data: { userId: user.id, name: "Freela", kind: TransactionKind.INCOME, color: "#14b8a6" },
@@ -37,7 +45,7 @@ async function seedDemoUser(email: string, name: string, password: string) {
       data: { userId: user.id, name: "Moradia", kind: TransactionKind.EXPENSE, color: "#0f172a" },
     }),
     food: await prisma.category.create({
-      data: { userId: user.id, name: "Alimentacao", kind: TransactionKind.EXPENSE, color: "#f59e0b" },
+      data: { userId: user.id, name: "Alimentação", kind: TransactionKind.EXPENSE, color: "#f59e0b" },
     }),
     transport: await prisma.category.create({
       data: { userId: user.id, name: "Transporte", kind: TransactionKind.EXPENSE, color: "#38bdf8" },
@@ -66,11 +74,11 @@ async function seedDemoUser(email: string, name: string, password: string) {
       {
         userId: user.id,
         categoryId: categories.salary.id,
-        title: "Salario CLT",
+        title: "Salário",
         amount: 9200,
         kind: TransactionKind.INCOME,
         occurredAt: atDay(now, 5),
-        notes: "Recebimento principal do mes.",
+        notes: "Recebimento principal do mês.",
       },
       {
         userId: user.id,
@@ -79,7 +87,7 @@ async function seedDemoUser(email: string, name: string, password: string) {
         amount: 1350,
         kind: TransactionKind.INCOME,
         occurredAt: atDay(now, 12),
-        notes: "Projeto recorrente fechado com cliente novo.",
+        notes: "Projeto recorrente.",
       },
       {
         userId: user.id,
@@ -88,7 +96,7 @@ async function seedDemoUser(email: string, name: string, password: string) {
         amount: 2800,
         kind: TransactionKind.EXPENSE,
         occurredAt: atDay(now, 6),
-        notes: "Pagamento do mes vigente.",
+        notes: "Pagamento do mês vigente.",
       },
       {
         userId: user.id,
@@ -97,7 +105,7 @@ async function seedDemoUser(email: string, name: string, password: string) {
         amount: 640,
         kind: TransactionKind.EXPENSE,
         occurredAt: atDay(now, 10),
-        notes: "Compras de casa e reposicao.",
+        notes: "Compras de casa.",
       },
       {
         userId: user.id,
@@ -124,7 +132,7 @@ async function seedDemoUser(email: string, name: string, password: string) {
         amount: 214,
         kind: TransactionKind.EXPENSE,
         occurredAt: atDay(now, 21),
-        notes: "Saida do fim de semana.",
+        notes: "Saída do fim de semana.",
       },
       {
         userId: user.id,
@@ -133,14 +141,20 @@ async function seedDemoUser(email: string, name: string, password: string) {
         amount: 48,
         kind: TransactionKind.EXPENSE,
         occurredAt: atDay(now, 24),
-        notes: "Cafe e lanches.",
+        notes: "Café e lanches.",
       },
     ],
   });
 }
 
-export async function bootstrapDemoUsers() {
+export async function bootstrapOwnerUser() {
   if (!shouldSeed) return;
-  await seedDemoUser("ana@finpilot.com", "Ana Pereira", "123456");
-  await seedDemoUser("arlindo@finpilot.com", "Arlindo Silva", "258012");
+  if (!OWNER_PASSWORD) {
+    console.warn(
+      "OWNER_PASSWORD não definido; a conta do dono não foi semeada. " +
+        "Defina OWNER_PASSWORD (e opcionalmente OWNER_EMAIL) ou cadastre-se em /register.",
+    );
+    return;
+  }
+  await seedOwner(OWNER_EMAIL, OWNER_NAME, OWNER_PASSWORD);
 }

@@ -1,0 +1,70 @@
+name: Deploy web para GitHub Pages
+
+on:
+  # Publica ao mesclar na branch padrão.
+  push:
+    branches: [main]
+    paths:
+      - "apps/web/**"
+      - "packages/**"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/deploy-pages.yml"
+  # Permite rodar manualmente pela aba Actions.
+  workflow_dispatch:
+
+# Permissões necessárias para publicar no Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Um deploy por vez.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Instalar dependências
+        run: pnpm install --frozen-lockfile
+
+      - name: Build do front
+        # Ajuste VITE_API_URL para o endereço público da sua API.
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL || 'https://finpilot-api-ng5i.onrender.com' }}
+        run: pnpm --filter @painel/web build
+
+      - name: Configurar Pages
+        uses: actions/configure-pages@v5
+        with:
+          # Habilita o GitHub Pages automaticamente se ainda não estiver ativo.
+          enablement: true
+
+      - name: Enviar artefato
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/web/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
