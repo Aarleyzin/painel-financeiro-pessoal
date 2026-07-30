@@ -160,10 +160,16 @@ async function seedOwner({
 async function main() {
   await ensureSchema();
 
+  const password = process.env.OWNER_PASSWORD;
+  if (!password) {
+    console.warn("OWNER_PASSWORD não definido; seed do dono ignorado.");
+    return;
+  }
+
   await seedOwner({
     email: (process.env.OWNER_EMAIL ?? "aarleyzin@meupainel.app").toLowerCase(),
     name: process.env.OWNER_NAME ?? "Aarleyzin",
-    password: process.env.OWNER_PASSWORD ?? "SENHA_REMOVIDA",
+    password,
   });
 }
 

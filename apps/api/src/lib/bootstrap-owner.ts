@@ -6,10 +6,10 @@ import { prisma } from "./prisma.js";
 // Desative em produção com SEED_OWNER_ON_START=false.
 const shouldSeed = process.env.SEED_OWNER_ON_START !== "false";
 
-// Dados do dono (podem ser sobrescritos por variáveis de ambiente).
+// Dados do dono vêm de variáveis de ambiente (nenhuma credencial fica no código).
 const OWNER_NAME = process.env.OWNER_NAME ?? "Aarleyzin";
 const OWNER_EMAIL = (process.env.OWNER_EMAIL ?? "aarleyzin@meupainel.app").toLowerCase();
-const OWNER_PASSWORD = process.env.OWNER_PASSWORD ?? "SENHA_REMOVIDA";
+const OWNER_PASSWORD = process.env.OWNER_PASSWORD;
 
 function currentMonthStart() {
   const now = new Date();
@@ -149,5 +149,12 @@ async function seedOwner(email: string, name: string, password: string) {
 
 export async function bootstrapOwnerUser() {
   if (!shouldSeed) return;
+  if (!OWNER_PASSWORD) {
+    console.warn(
+      "OWNER_PASSWORD não definido; a conta do dono não foi semeada. " +
+        "Defina OWNER_PASSWORD (e opcionalmente OWNER_EMAIL) ou cadastre-se em /register.",
+    );
+    return;
+  }
   await seedOwner(OWNER_EMAIL, OWNER_NAME, OWNER_PASSWORD);
 }

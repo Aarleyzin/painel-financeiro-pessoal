@@ -74,13 +74,13 @@ pnpm dev
 
 ## Conta de acesso
 
-Uma conta pessoal é criada automaticamente no primeiro start da API:
+Nenhuma credencial fica no repositório. A conta pessoal é criada a partir de
+variáveis de ambiente, definidas apenas no seu ambiente/hospedagem:
 
-- Nome: `Aarleyzin`
-- E-mail: `aarleyzin@meupainel.app` (ajustável por `OWNER_EMAIL`)
-- Senha: definida por `OWNER_PASSWORD` (há um padrão no código apenas para desenvolvimento — troque em produção)
+- `OWNER_NAME`, `OWNER_EMAIL` e `OWNER_PASSWORD`
 
-Você também pode criar sua própria conta em `/register`.
+Se `OWNER_PASSWORD` não estiver definido, nenhuma conta é semeada. Você também
+pode criar sua conta diretamente em `/register`.
 
 ## Capturas sugeridas
 
