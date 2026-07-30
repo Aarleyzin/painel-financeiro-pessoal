@@ -15,6 +15,14 @@ async function ensureAuth(userId?: string) {
   return userId;
 }
 
+async function ensureCategoryOwnership(userId: string, categoryId: string | undefined) {
+  if (!categoryId) return;
+  const category = await prisma.category.findFirst({ where: { id: categoryId, userId } });
+  if (!category) {
+    throw Object.assign(new Error("Category not found"), { status: 404 });
+  }
+}
+
 async function resolveBudgetOrThrow(userId: string, id: string) {
   const budget = await prisma.monthlyLimit.findFirst({ where: { id, userId } });
   if (!budget) {
@@ -60,6 +68,7 @@ export async function listBudgetsService(userId?: string, query: Record<string, 
 export async function createBudgetService(userId: string | undefined, payload: unknown) {
   const authUserId = await ensureAuth(userId);
   const data = budgetSchema.parse(payload);
+  await ensureCategoryOwnership(authUserId, data.categoryId);
 
   const item = await prisma.monthlyLimit.create({
     data: {
@@ -92,6 +101,9 @@ export async function updateBudgetService(
   const authUserId = await ensureAuth(userId);
   await resolveBudgetOrThrow(authUserId, id);
   const data = budgetSchema.partial().parse(payload);
+  if (data.categoryId !== undefined) {
+    await ensureCategoryOwnership(authUserId, data.categoryId);
+  }
 
   const item = await prisma.monthlyLimit.update({
     where: { id },
