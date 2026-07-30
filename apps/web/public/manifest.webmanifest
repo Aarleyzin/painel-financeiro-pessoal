@@ -1,6 +1,6 @@
 {
-  "name": "Saldo — Painel Financeiro",
-  "short_name": "Saldo",
+  "name": "Fatia — Painel Financeiro",
+  "short_name": "Fatia",
   "description": "Controle suas receitas, despesas e limites em um painel minimalista.",
   "lang": "pt-BR",
   "start_url": "./",
