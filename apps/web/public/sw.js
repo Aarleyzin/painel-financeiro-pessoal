@@ -2,7 +2,8 @@
 // Estratégia: app shell em cache para abrir offline; assets com
 // stale-while-revalidate. Chamadas à API (outra origem) não são cacheadas.
 const CACHE = "painel-financeiro-v1";
-const APP_SHELL = ["/", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png"];
+// Caminhos relativos ao escopo do service worker (funciona em subpasta do Pages).
+const APP_SHELL = ["./", "./manifest.webmanifest", "./icon.svg", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -33,10 +34,10 @@ self.addEventListener("fetch", (event) => {
       fetch(request)
         .then((response) => {
           const copy = response.clone();
-          caches.open(CACHE).then((cache) => cache.put("/", copy));
+          caches.open(CACHE).then((cache) => cache.put("./", copy));
           return response;
         })
-        .catch(() => caches.match("/")),
+        .catch(() => caches.match("./")),
     );
     return;
   }
