@@ -25,7 +25,7 @@ O Painel Financeiro Pessoal foi pensado como uma aplicação com cara de produto
 ## Estrutura
 
 ```text
-finpilot-financeiro/
+painel-pessoal-financeiro/
 ├─ apps/
 │  ├─ web/        # React + Tailwind
 │  └─ api/        # Node.js + Express
@@ -57,7 +57,7 @@ finpilot-financeiro/
 
 ## Link do repositório
 
-- [GitHub público](https://github.com/Aarleyzin/finpilot-financeiro)
+- [GitHub público](https://github.com/Aarleyzin/painel-pessoal-financeiro)
 
 ## Como rodar
 

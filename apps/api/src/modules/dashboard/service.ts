@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma.js";
-import type { FinanceSummary } from "@finpilot/shared";
+import type { FinanceSummary } from "@painel/shared";
 
 function currentMonthRange() {
   const now = new Date();

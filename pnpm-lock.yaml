@@ -17,7 +17,7 @@ importers:
 
   apps/api:
     dependencies:
-      '@finpilot/shared':
+      '@painel/shared':
         specifier: workspace:*
         version: link:../../packages/shared
       '@prisma/client':

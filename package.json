@@ -1,5 +1,5 @@
 {
-  "name": "finpilot-financeiro",
+  "name": "painel-pessoal-financeiro",
   "private": true,
   "version": "0.1.0",
   "packageManager": "pnpm@9.15.0",
@@ -8,10 +8,10 @@
     "build": "turbo build",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
-    "db:generate": "pnpm --filter @finpilot/api prisma generate",
-    "db:migrate": "pnpm --filter @finpilot/api prisma migrate dev",
-    "db:seed": "pnpm --filter @finpilot/api prisma db seed",
-    "db:studio": "pnpm --filter @finpilot/api prisma studio"
+    "db:generate": "pnpm --filter @painel/api prisma generate",
+    "db:migrate": "pnpm --filter @painel/api prisma migrate dev",
+    "db:seed": "pnpm --filter @painel/api prisma db seed",
+    "db:studio": "pnpm --filter @painel/api prisma studio"
   },
   "devDependencies": {
     "turbo": "^2.3.3",

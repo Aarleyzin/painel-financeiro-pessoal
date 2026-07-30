@@ -45,7 +45,7 @@ jobs:
         # Ajuste VITE_API_URL para o endereço público da sua API.
         env:
           VITE_API_URL: ${{ vars.VITE_API_URL || 'https://finpilot-api-ng5i.onrender.com' }}
-        run: pnpm --filter @finpilot/web build
+        run: pnpm --filter @painel/web build
 
       - name: Configurar Pages
         uses: actions/configure-pages@v5

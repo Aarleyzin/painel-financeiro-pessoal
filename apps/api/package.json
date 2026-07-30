@@ -1,5 +1,5 @@
 {
-  "name": "@finpilot/api",
+  "name": "@painel/api",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -12,7 +12,7 @@
     "prisma": "prisma"
   },
   "dependencies": {
-    "@finpilot/shared": "workspace:*",
+    "@painel/shared": "workspace:*",
     "@prisma/client": "^6.13.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
