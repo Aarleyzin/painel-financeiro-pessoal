@@ -5,8 +5,8 @@ import { useAuth } from "../../context/auth";
 export function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const [email, setEmail] = useState("ana@finpilot.com");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState("aarleyzin@meupainel.app");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
