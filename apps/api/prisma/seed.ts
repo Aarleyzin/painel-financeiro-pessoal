@@ -18,7 +18,7 @@ async function ensureSchema() {
   return;
 }
 
-async function seedDemoUser({
+async function seedOwner({
   email,
   name,
   password,
@@ -35,9 +35,12 @@ async function seedDemoUser({
     create: { name, email, passwordHash },
   });
 
-  await prisma.transaction.deleteMany({ where: { userId: user.id } });
-  await prisma.monthlyLimit.deleteMany({ where: { userId: user.id } });
-  await prisma.category.deleteMany({ where: { userId: user.id } });
+  // Não apaga dados existentes: só semeia exemplos se a conta estiver vazia.
+  const existingTransactions = await prisma.transaction.count({ where: { userId: user.id } });
+  if (existingTransactions > 0) {
+    console.log(`Conta ${email} já possui dados; seed de exemplo ignorado.`);
+    return;
+  }
 
   const categories = {
     salary: await prisma.category.create({
@@ -157,8 +160,11 @@ async function seedDemoUser({
 async function main() {
   await ensureSchema();
 
-  await seedDemoUser({ email: "ana@finpilot.com", name: "Ana Pereira", password: "123456" });
-  await seedDemoUser({ email: "arlindo@finpilot.com", name: "Arlindo Silva", password: "258012" });
+  await seedOwner({
+    email: (process.env.OWNER_EMAIL ?? "aarleyzin@meupainel.app").toLowerCase(),
+    name: process.env.OWNER_NAME ?? "Aarleyzin",
+    password: process.env.OWNER_PASSWORD ?? "SENHA_REMOVIDA",
+  });
 }
 
 main()

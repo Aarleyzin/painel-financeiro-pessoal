@@ -13,7 +13,7 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-const STORAGE_KEY = "finpilot-financeiro.auth";
+const STORAGE_KEY = "meu-painel-financeiro.auth";
 
 type StoredAuth = {
   token: string;

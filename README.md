@@ -1,6 +1,6 @@
-﻿# FinPilot Financeiro
+﻿# Painel Financeiro Pessoal
 
-Plataforma de gestão financeira para organizar receitas, despesas, metas e limites em um dashboard visual, simples e profissional.
+Painel pessoal para organizar receitas, despesas, categorias e limites em um dashboard visual, minimalista e direto.
 
 ## Destaques
 
@@ -13,7 +13,7 @@ Plataforma de gestão financeira para organizar receitas, despesas, metas e limi
 
 ## Preview
 
-O FinPilot Financeiro foi pensado para apresentar no portfólio uma aplicação com cara de produto real:
+O Painel Financeiro Pessoal foi pensado como uma aplicação com cara de produto real:
 
 - landing page com proposta clara do projeto
 - tela de login e cadastro
@@ -72,10 +72,15 @@ pnpm db:seed
 pnpm dev
 ```
 
-## Conta demo
+## Conta de acesso
 
-- E-mail: `ana@finpilot.com`
-- Senha: `123456`
+Uma conta pessoal é criada automaticamente no primeiro start da API:
+
+- Nome: `Aarleyzin`
+- E-mail: `aarleyzin@meupainel.app` (ajustável por `OWNER_EMAIL`)
+- Senha: definida por `OWNER_PASSWORD` (há um padrão no código apenas para desenvolvimento — troque em produção)
+
+Você também pode criar sua própria conta em `/register`.
 
 ## Capturas sugeridas
 
