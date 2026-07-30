@@ -16,21 +16,21 @@ export function ProtectedShell() {
       <header className="border-b border-slate-200 bg-white/80 backdrop-blur">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-lg font-semibold text-slate-950">FinPilot Financeiro</p>
-            <p className="text-sm text-slate-500">Painel financeiro do usuário</p>
+            <p className="text-lg font-semibold text-slate-950">💰 Painel Financeiro</p>
+            <p className="text-sm text-slate-500">Suas finanças pessoais</p>
           </div>
           <nav className="flex flex-wrap gap-2">
             <NavLink to="/dashboard" className={linkClass}>
-              Dashboard
+              📊 Painel
             </NavLink>
             <NavLink to="/transactions" className={linkClass}>
-              Receitas e despesas
+              💸 Receitas e despesas
             </NavLink>
             <NavLink to="/categories" className={linkClass}>
-              Categorias
+              🏷️ Categorias
             </NavLink>
             <NavLink to="/budgets" className={linkClass}>
-              Limites
+              🎯 Limites
             </NavLink>
           </nav>
           <div className="flex items-center gap-3">

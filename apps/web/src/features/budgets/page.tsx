@@ -2,6 +2,7 @@
 import { apiRequest } from "../../lib/api";
 import { useAuth } from "../../context/auth";
 import { Card } from "../../components/ui/Card";
+import { formatBRL } from "../shared/utils";
 
 type Category = {
   id: string;
@@ -116,7 +117,7 @@ export function BudgetsPage() {
       <section className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
         <Card>
           <h2 className="text-lg font-semibold text-slate-950">
-            {editingId ? "Editar limite" : "Novo limite mensal"}
+            {editingId ? "✏️ Editar limite" : "🎯 Novo limite mensal"}
           </h2>
           <form className="mt-5 grid gap-4" onSubmit={handleSubmit}>
             <select
@@ -178,23 +179,23 @@ export function BudgetsPage() {
 
         <div className="grid gap-6">
           <Card>
-            <p className="text-sm text-slate-500">Limite total ativo</p>
+            <p className="text-sm text-slate-500">💰 Limite total ativo</p>
             <p className="mt-2 text-3xl font-semibold text-slate-950">
-              R$ {totals.monthlyLimit.toFixed(2)}
+              {formatBRL(totals.monthlyLimit)}
             </p>
           </Card>
           <Card>
-            <p className="text-sm text-slate-500">Limites cadastrados</p>
+            <p className="text-sm text-slate-500">🎯 Limites cadastrados</p>
             <p className="mt-2 text-3xl font-semibold text-slate-950">{totals.activeBudgets}</p>
           </Card>
           <Card>
-            <h3 className="text-lg font-semibold text-slate-950">Limites por categoria</h3>
+            <h3 className="text-lg font-semibold text-slate-950">📋 Limites por categoria</h3>
             <div className="mt-4 space-y-3">
               {items.map((item) => (
                 <div key={item.id} className="rounded-2xl bg-slate-50 px-4 py-4">
                   <div className="flex items-center justify-between">
                     <p className="font-medium text-slate-950">{item.categoryName}</p>
-                    <p className="font-semibold text-brand-700">R$ {item.limitAmount.toFixed(2)}</p>
+                    <p className="font-semibold text-brand-700">{formatBRL(item.limitAmount)}</p>
                   </div>
                   <p className="text-sm text-slate-500">
                     {String(item.month).padStart(2, "0")}/{item.year}

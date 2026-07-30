@@ -67,7 +67,7 @@ export function CategoriesPage() {
       <section className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
         <Card>
           <h2 className="text-lg font-semibold text-slate-950">
-            {editingId ? "Editar categoria" : "Nova categoria"}
+            {editingId ? "✏️ Editar categoria" : "🏷️ Nova categoria"}
           </h2>
           <form className="mt-5 grid gap-4" onSubmit={handleSubmit}>
             <input
@@ -97,7 +97,7 @@ export function CategoriesPage() {
         </Card>
 
         <Card>
-          <h2 className="text-lg font-semibold text-slate-950">Categorias</h2>
+          <h2 className="text-lg font-semibold text-slate-950">🏷️ Categorias</h2>
           <div className="mt-5 space-y-3">
             {items.map((item) => (
               <div
@@ -111,7 +111,9 @@ export function CategoriesPage() {
                   />
                   <div>
                     <p className="font-medium text-slate-950">{item.name}</p>
-                    <p className="text-sm text-slate-500">{item.kind}</p>
+                    <p className="text-sm text-slate-500">
+                      {item.kind === "income" ? "📈 Receita" : "📉 Despesa"}
+                    </p>
                   </div>
                 </div>
                 <div className="flex gap-4">
