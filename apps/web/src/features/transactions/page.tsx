@@ -1,134 +1,92 @@
-﻿import { useEffect, useState, type FormEvent } from "react";
-import { apiRequest } from "../../lib/api";
-import { useAuth } from "../../context/auth";
+import { useEffect, useState, type FormEvent } from "react";
 import { Card } from "../../components/ui/Card";
-import { formatBRL, toDateTimeLocalValue } from "../shared/utils";
+import { formatBRL, formatDateBR } from "../shared/utils";
+import {
+  deleteTransaction,
+  getCategories,
+  getTransactions,
+  onChange,
+  saveTransaction,
+  type Category,
+  type Kind,
+  type Transaction,
+} from "../../lib/store";
 
-type Category = {
-  id: string;
-  name: string;
-  kind: "income" | "expense";
-};
-
-type Transaction = {
-  id: string;
-  title: string;
-  amount: number;
-  kind: "income" | "expense";
-  categoryId: string | null;
-  categoryName: string | null;
-  occurredAt: string;
-  notes: string | null;
-};
+function hoje() {
+  return new Date().toISOString().slice(0, 10);
+}
 
 export function TransactionsPage() {
-  const { token } = useAuth();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState({
-    title: "",
+    description: "",
     amount: "",
-    kind: "expense" as "income" | "expense",
+    kind: "despesa" as Kind,
     categoryId: "",
-    occurredAt: toDateTimeLocalValue(),
-    notes: "",
+    date: hoje(),
   });
 
-  async function loadData() {
-    setLoading(true);
-    const [transactionResponse, categoryResponse] = await Promise.all([
-      apiRequest<{ items: Transaction[] }>("/api/transactions", { token }),
-      apiRequest<{ items: Category[] }>("/api/categories", { token }),
-    ]);
-    setTransactions(transactionResponse.items);
-    setCategories(categoryResponse.items);
-    setLoading(false);
-  }
-
   useEffect(() => {
-    loadData().catch(console.error);
+    const load = () => {
+      setTransactions(getTransactions());
+      setCategories(getCategories());
+    };
+    load();
+    return onChange(load);
   }, []);
 
   function resetForm() {
     setEditingId(null);
-    setForm({
-      title: "",
-      amount: "",
-      kind: "expense",
-      categoryId: "",
-      occurredAt: toDateTimeLocalValue(),
-      notes: "",
-    });
+    setForm({ description: "", amount: "", kind: "despesa", categoryId: "", date: hoje() });
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSaving(true);
+    if (!form.description.trim() || !form.amount || !form.categoryId) return;
 
-    const payload = {
-      title: form.title,
-      amount: Number(form.amount),
+    saveTransaction({
+      id: editingId ?? undefined,
+      description: form.description.trim(),
+      amount: Math.abs(Number(form.amount)),
       kind: form.kind,
-      categoryId: form.categoryId || null,
-      occurredAt: new Date(form.occurredAt).toISOString(),
-      notes: form.notes || null,
-    };
-
-    try {
-      if (editingId) {
-        await apiRequest(`/api/transactions/${editingId}`, {
-          method: "PATCH",
-          token,
-          body: JSON.stringify(payload),
-        });
-      } else {
-        await apiRequest("/api/transactions", {
-          method: "POST",
-          token,
-          body: JSON.stringify(payload),
-        });
-      }
-
-      await loadData();
-      resetForm();
-    } finally {
-      setSaving(false);
-    }
+      categoryId: form.categoryId,
+      date: form.date,
+    });
+    resetForm();
   }
 
-  function startEdit(transaction: Transaction) {
-    setEditingId(transaction.id);
+  function startEdit(t: Transaction) {
+    setEditingId(t.id);
     setForm({
-      title: transaction.title,
-      amount: String(transaction.amount),
-      kind: transaction.kind,
-      categoryId: transaction.categoryId ?? "",
-      occurredAt: toDateTimeLocalValue(new Date(transaction.occurredAt)),
-      notes: transaction.notes ?? "",
+      description: t.description,
+      amount: String(t.amount),
+      kind: t.kind,
+      categoryId: t.categoryId,
+      date: t.date,
     });
   }
 
-  async function handleDelete(id: string) {
-    await apiRequest(`/api/transactions/${id}`, { method: "DELETE", token });
-    await loadData();
-  }
+  const categoriasDoTipo = categories.filter((c) => c.kind === form.kind);
+  const ordenadas = [...transactions].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+  );
+  const categoriaPorId = new Map(categories.map((c) => [c.id, c]));
 
   return (
-    <main className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-6 py-8">
+    <main className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-6 sm:px-6 sm:py-8">
       <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
         <Card>
           <h2 className="text-lg font-semibold text-slate-950">
-            {editingId ? "✏️ Editar transação" : "💸 Nova transação"}
+            {editingId ? "✏️ Editar movimentação" : "💸 Nova movimentação"}
           </h2>
           <form className="mt-5 grid gap-4" onSubmit={handleSubmit}>
             <input
               className="rounded-2xl border border-slate-200 px-4 py-3"
-              placeholder="Título"
-              value={form.title}
-              onChange={(event) => setForm({ ...form, title: event.target.value })}
+              placeholder="Descrição (ex.: Mercado da semana)"
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
             <div className="grid gap-4 md:grid-cols-2">
               <input
@@ -136,53 +94,43 @@ export function TransactionsPage() {
                 type="number"
                 min="0"
                 step="0.01"
-                placeholder="Valor"
+                placeholder="Valor (R$)"
                 value={form.amount}
-                onChange={(event) => setForm({ ...form, amount: event.target.value })}
+                onChange={(e) => setForm({ ...form, amount: e.target.value })}
               />
               <select
                 className="rounded-2xl border border-slate-200 px-4 py-3"
                 value={form.kind}
-                onChange={(event) =>
-                  setForm({ ...form, kind: event.target.value as "income" | "expense" })
-                }
+                onChange={(e) => setForm({ ...form, kind: e.target.value as Kind, categoryId: "" })}
               >
-                <option value="expense">Despesa</option>
-                <option value="income">Receita</option>
+                <option value="despesa">📉 Despesa</option>
+                <option value="receita">📈 Receita</option>
               </select>
             </div>
             <select
               className="rounded-2xl border border-slate-200 px-4 py-3"
               value={form.categoryId}
-              onChange={(event) => setForm({ ...form, categoryId: event.target.value })}
+              onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
             >
-              <option value="">Sem categoria</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
+              <option value="">Selecione uma categoria</option>
+              {categoriasDoTipo.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.emoji} {c.name}
                 </option>
               ))}
             </select>
             <input
               className="rounded-2xl border border-slate-200 px-4 py-3"
-              type="datetime-local"
-              value={form.occurredAt}
-              onChange={(event) => setForm({ ...form, occurredAt: event.target.value })}
-            />
-            <textarea
-              className="rounded-2xl border border-slate-200 px-4 py-3"
-              placeholder="Observações"
-              rows={4}
-              value={form.notes}
-              onChange={(event) => setForm({ ...form, notes: event.target.value })}
+              type="date"
+              value={form.date}
+              onChange={(e) => setForm({ ...form, date: e.target.value })}
             />
             <div className="flex gap-3">
               <button
                 className="rounded-2xl bg-brand-700 px-4 py-3 font-medium text-white disabled:opacity-60"
-                disabled={saving}
                 type="submit"
               >
-                {saving ? "Salvando..." : editingId ? "Atualizar" : "Adicionar"}
+                {editingId ? "Atualizar" : "Adicionar"}
               </button>
               {editingId ? (
                 <button
@@ -194,54 +142,63 @@ export function TransactionsPage() {
                 </button>
               ) : null}
             </div>
+            {categoriasDoTipo.length === 0 ? (
+              <p className="text-sm text-amber-600">
+                Nenhuma categoria de {form.kind} ainda. Crie uma em Categorias.
+              </p>
+            ) : null}
           </form>
         </Card>
 
         <Card>
           <h2 className="text-lg font-semibold text-slate-950">🧾 Movimentações</h2>
           <div className="mt-5 space-y-3">
-            {loading ? (
-              <p className="text-sm text-slate-500">Carregando...</p>
+            {ordenadas.length === 0 ? (
+              <p className="text-sm text-slate-500">Nenhuma movimentação registrada ainda.</p>
             ) : (
-              transactions.map((transaction) => (
-                <div
-                  key={transaction.id}
-                  className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-4"
-                >
-                  <div>
-                    <p className="font-medium text-slate-950">{transaction.title}</p>
-                    <p className="text-sm text-slate-500">
-                      {transaction.categoryName ?? "Sem categoria"} • {" "}
-                      {new Date(transaction.occurredAt).toLocaleDateString("pt-BR")}
-                    </p>
+              ordenadas.map((t) => {
+                const category = categoriaPorId.get(t.categoryId);
+                const isReceita = t.kind === "receita";
+                return (
+                  <div
+                    key={t.id}
+                    className="flex items-center justify-between gap-3 rounded-2xl bg-slate-50 px-4 py-4"
+                  >
+                    <div className="min-w-0">
+                      <p className="truncate font-medium text-slate-950">{t.description}</p>
+                      <p className="text-sm text-slate-500">
+                        <span aria-hidden>{category?.emoji}</span> {category?.name ?? "Outros"} •{" "}
+                        {formatDateBR(t.date)}
+                      </p>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-3">
+                      <p
+                        className={
+                          isReceita
+                            ? "font-semibold text-emerald-600"
+                            : "font-semibold text-rose-600"
+                        }
+                      >
+                        {isReceita ? "+" : "-"} {formatBRL(t.amount)}
+                      </p>
+                      <button
+                        className="text-sm font-medium text-brand-700"
+                        onClick={() => startEdit(t)}
+                        type="button"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        className="text-sm font-medium text-rose-600"
+                        onClick={() => deleteTransaction(t.id)}
+                        type="button"
+                      >
+                        Excluir
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <p
-                      className={
-                        transaction.kind === "income"
-                          ? "font-semibold text-emerald-600"
-                          : "font-semibold text-rose-600"
-                      }
-                    >
-                      {transaction.kind === "income" ? "+" : "-"} {formatBRL(transaction.amount)}
-                    </p>
-                    <button
-                      className="text-sm font-medium text-brand-700"
-                      onClick={() => startEdit(transaction)}
-                      type="button"
-                    >
-                      Editar
-                    </button>
-                    <button
-                      className="text-sm font-medium text-rose-600"
-                      onClick={() => handleDelete(transaction.id)}
-                      type="button"
-                    >
-                      Excluir
-                    </button>
-                  </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         </Card>
