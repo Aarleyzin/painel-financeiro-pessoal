@@ -1,14 +1,70 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Saldo">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Fatia">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0ea5a4"/>
-      <stop offset="1" stop-color="#0f766e"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#12796a"/>
+      <stop offset="1" stop-color="#0a5c4c"/>
+    </linearGradient>
+    <linearGradient id="cheese" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFD65C"/>
+      <stop offset="1" stop-color="#F6B72C"/>
+    </linearGradient>
+    <linearGradient id="crust" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FBAE33"/>
+      <stop offset="1" stop-color="#EE9317"/>
+    </linearGradient>
+    <linearGradient id="coin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F7B733"/>
+      <stop offset="1" stop-color="#E28C12"/>
     </linearGradient>
   </defs>
-  <rect width="512" height="512" rx="112" fill="url(#g)"/>
-  <g fill="#ffffff">
-    <rect x="90" y="222" width="84" height="150" rx="14"/>
-    <rect x="214" y="144" width="84" height="228" rx="14"/>
-    <rect x="338" y="72" width="84" height="300" rx="14"/>
+
+  <rect width="512" height="512" rx="114" fill="url(#bg)"/>
+
+  <g transform="translate(256,256) scale(0.93) translate(-256,-256)">
+    <g transform="translate(82,425) rotate(-40)">
+      <!-- profundidade (lateral da fatia) -->
+      <g transform="translate(7,9)">
+        <path d="M0,0 L295.2,-191.7 A 352,352 0 0 1 295.2,191.7 Z"
+              fill="#0A4E42" stroke="#0A4E42" stroke-width="24" stroke-linejoin="round"/>
+      </g>
+
+      <!-- crosta -->
+      <path d="M241,-156.5 L295.2,-191.7 A 352,352 0 0 1 295.2,191.7 L241,156.5 A 287,287 0 0 0 241,-156.5 Z"
+            fill="url(#crust)" stroke="url(#crust)" stroke-width="22" stroke-linejoin="round"/>
+
+      <!-- queijo -->
+      <path d="M0,0 L232,-150.6 A 277,277 0 0 1 232,150.6 Z"
+            fill="url(#cheese)" stroke="url(#cheese)" stroke-width="24" stroke-linejoin="round"/>
+
+      <!-- molho na borda do queijo -->
+      <path d="M234,-152 A 279,279 0 0 1 234,152"
+            fill="none" stroke="#E4572E" stroke-width="16" stroke-linecap="round"/>
+
+      <!-- manjericão -->
+      <g fill="#49A54D">
+        <ellipse cx="138" cy="62" rx="21" ry="11" transform="rotate(-18 138 62)"/>
+        <ellipse cx="138" cy="-62" rx="21" ry="11" transform="rotate(18 138 -62)"/>
+        <ellipse cx="246" cy="44" rx="20" ry="10" transform="rotate(-8 246 44)"/>
+      </g>
+
+      <!-- calabresa -->
+      <g fill="#E23E2C">
+        <circle cx="85" cy="0" r="30"/>
+        <circle cx="212" cy="-90" r="30"/>
+        <circle cx="212" cy="90" r="30"/>
+      </g>
+
+      <!-- moeda -->
+      <g transform="translate(183,0)">
+        <circle r="62" fill="url(#coin)"/>
+        <circle r="62" fill="none" stroke="#C6780C" stroke-width="6"/>
+        <circle r="48" fill="none" stroke="#FFDE8A" stroke-width="4" opacity="0.75"/>
+        <g transform="rotate(40)">
+          <text x="0" y="2" text-anchor="middle" dominant-baseline="central"
+                font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif"
+                font-size="78" font-weight="bold" fill="#FFFBEF">$</text>
+        </g>
+      </g>
+    </g>
   </g>
 </svg>

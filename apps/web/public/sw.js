@@ -1,7 +1,7 @@
 // Service worker minimalista do Painel Financeiro Pessoal.
 // Estratégia: app shell em cache para abrir offline; assets com
 // stale-while-revalidate. Chamadas à API (outra origem) não são cacheadas.
-const CACHE = "painel-financeiro-v1";
+const CACHE = "fatia-v2";
 // Caminhos relativos ao escopo do service worker (funciona em subpasta do Pages).
 const APP_SHELL = ["./", "./manifest.webmanifest", "./icon.svg", "./icon-192.png", "./icon-512.png"];
 
