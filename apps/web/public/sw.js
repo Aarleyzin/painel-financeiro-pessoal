@@ -1,9 +1,9 @@
 // Service worker minimalista do Painel Financeiro Pessoal.
 // Estratégia: app shell em cache para abrir offline; assets com
 // stale-while-revalidate. Chamadas à API (outra origem) não são cacheadas.
-const CACHE = "fatia-v2";
+const CACHE = "fatia-v3";
 // Caminhos relativos ao escopo do service worker (funciona em subpasta do Pages).
-const APP_SHELL = ["./", "./manifest.webmanifest", "./icon.svg", "./icon-192.png", "./icon-512.png"];
+const APP_SHELL = ["./", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
